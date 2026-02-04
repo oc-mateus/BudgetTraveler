@@ -14,14 +14,16 @@ const API_KEY = process.env.GEMINI_API_KEY.trim();
 const genAi = new GoogleGenerativeAI(API_KEY);
 
 app.post("/api/recommendations", async (req, res) => {
-  const { budget, days } = req.body;
-  console.log(`Processando: R$${budget} por ${days} dias...`);
+  const { budget, days, scope: finalDestination } = req.body;
+  console.log(
+    `Processando: R$${budget} por ${days} dias no ${finalDestination}`
+  );
 
   try {
     const model = genAi.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
-        Aja como uma API de viagens. O usuário tem R$ ${budget} para ${days} dias.
+        Aja como uma API de viagens. O usuário tem R$ ${budget} para ${days} dias e quer viajar para ${finalDestination}.
         Gere 3 sugestões de destinos reais.
         
         IMPORTANTE: Retorne APENAS um Array JSON puro. Sem Markdown. Sem texto antes ou depois.
